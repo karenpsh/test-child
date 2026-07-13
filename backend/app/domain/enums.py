@@ -88,6 +88,19 @@ class ResolutionState(str, Enum):
     WITHDRAWN = "withdrawn"
 
 
+class VerificationStatus(str, Enum):
+    """Human verification state of an AI-proposed output (PRD 12.3).
+
+    Every AI output is unverified until a human accepts, edits or rejects it.
+    The original AI output is retained regardless (auditable corrections).
+    """
+
+    UNVERIFIED = "unverified"
+    ACCEPTED = "accepted"
+    EDITED = "edited"
+    REJECTED = "rejected"
+
+
 class ApplicationStatus(str, Enum):
     """High-level lifecycle status surfaced to users (PRD 8, acceptance #3)."""
 

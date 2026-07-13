@@ -8,7 +8,7 @@ Maps SAGE PRD v0.2 sections to the scaffold implementation. Legend:
 | Module | Package | Status |
 | :---- | :---- | :---- |
 | Programme Studio | `app/modules/programme_studio` | ✅ create, list, publish (methodology-gated) |
-| Evidence Vault | `app/modules/evidence_vault` | ✅ ingest, claims, evidence citations · 🟡 auto classification/extraction |
+| Evidence Vault | `app/modules/evidence_vault` | ✅ ingest, claims, evidence citations, AI deck extraction + human verify (accept/edit/reject) |
 | Policy Alignment Studio | `app/modules/policy_alignment_studio` | ✅ packs, propose/validate mappings (FRA-004) · 🟡 framework decomposition |
 | Assessment Workspace | `app/modules/assessment_workspace` | ✅ blind scorecards, threshold reveal, lock |
 | Rules Engine | `app/modules/rules_engine` | ✅ SAI/SSAI/SSEI/EVI, decision matrix, divergence, vetoes, publication blocks |
@@ -39,6 +39,17 @@ returned as a separate lens.
 | §10.2 Veto categories | `domain/enums.py::VetoCategory`, enforced in `service.py` / committee router |
 | §10.3 Decision taxonomy | `domain/enums.py::DecisionState` |
 | Determinism / no AI in scoring | Pure functions; no model calls anywhere in `rules_engine` |
+
+## AI Requirements (PRD §12)
+
+| PRD | Implementation |
+| :---- | :---- |
+| §12.1 Permitted — document extraction, claim & contradiction detection, evidence-gap suggestion | `app/integrations/ai/deck_extraction.py::review_deck` (Claude `messages.parse` + deterministic fallback) |
+| §12.2 Prohibited — AI never scores, sets eligibility, vetoes or decides | Rules Engine is pure and AI-free; extraction only proposes claims |
+| §12.3 Output controls — source, confidence, model version, verification status; accept/edit/reject; original + correction auditable | `Claim.ai_*` fields + `VerificationStatus`; `evidence_vault::verify_claim` preserves `ai_original_text` |
+
+Endpoints: `POST /applications/{id}/deck:extract`, `POST /applications/{id}/claims/{id}/verify`.
+Live path requires `ANTHROPIC_API_KEY` (`claude-opus-4-8`); otherwise a deterministic offline extractor runs so the pipeline is testable without credentials.
 
 ## Google Drive (PRD §9)
 

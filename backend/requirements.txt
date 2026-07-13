@@ -3,6 +3,12 @@ fastapi>=0.111
 uvicorn[standard]>=0.30
 pydantic>=2.7
 pydantic-settings>=2.3
+python-multipart>=0.0.9
+pypdf>=4.2
+
+# Optional: enables the live AI deck-extraction path (PRD 12.1).
+# Without a configured ANTHROPIC_API_KEY the deterministic fallback is used.
+anthropic>=0.116
 
 # Dev / test
 pytest>=8.2

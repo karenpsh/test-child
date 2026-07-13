@@ -23,6 +23,7 @@ from app.domain.enums import (
     ResolutionState,
     Role,
     StrategicMaturity,
+    VerificationStatus,
     VetoCategory,
 )
 
@@ -37,13 +38,27 @@ class EvidenceCitation(BaseModel):
 
 
 class Claim(BaseModel):
-    """A material assertion extracted from an application (PRD 8.2)."""
+    """A material assertion extracted from an application (PRD 8.2).
+
+    When a claim originates from AI extraction (PRD 12.1), it carries the
+    output controls required by PRD 12.3: source evidence, confidence, model
+    version and verification status. The original AI text is preserved even
+    after a human edits ``text`` so the correction remains auditable.
+    """
 
     id: UUID = Field(default_factory=uuid4)
     text: str
     evidence_state: EvidenceState = EvidenceState.APPLICANT_DECLARATION_ONLY
     citations: list[EvidenceCitation] = Field(default_factory=list)
     contradicted: bool = False
+    contradiction_note: str | None = None
+
+    # AI output controls (PRD 12.3). Absent/None for human-entered claims.
+    ai_generated: bool = False
+    ai_model_version: str | None = None
+    ai_confidence: float | None = Field(default=None, ge=0, le=1)
+    ai_original_text: str | None = None
+    verification_status: VerificationStatus = VerificationStatus.UNVERIFIED
 
 
 class DimensionScore(BaseModel):

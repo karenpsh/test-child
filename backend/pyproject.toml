@@ -9,13 +9,19 @@ dependencies = [
     "uvicorn[standard]>=0.30",
     "pydantic>=2.7",
     "pydantic-settings>=2.3",
+    "python-multipart>=0.0.9",
+    "pypdf>=4.2",
 ]
 
 [project.optional-dependencies]
+# Enables the live AI deck-extraction path (PRD 12.1). Falls back to a
+# deterministic offline extractor when no ANTHROPIC_API_KEY is configured.
+ai = ["anthropic>=0.116"]
 dev = [
     "pytest>=8.2",
     "httpx>=0.27",
     "ruff>=0.5",
+    "reportlab>=4.0",
 ]
 
 [tool.ruff]
