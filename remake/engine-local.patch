@@ -1,0 +1,41 @@
+diff --git a/engine/lib/browser.mjs b/engine/lib/browser.mjs
+index 4f24a7b..fb5ff66 100644
+--- a/engine/lib/browser.mjs
++++ b/engine/lib/browser.mjs
+@@ -17,7 +17,10 @@ const ARGS = [
+ 
+ export async function launch() {
+   try {
+-    return await chromium.launch({ args: ARGS });
++    // Local change for this cloud session: Playwright's route.fetch ignores HTTPS_PROXY, so pass the
++    // session proxy at launch. Network plumbing only; scoring and freeze logic are untouched.
++    const proxy = process.env.HTTPS_PROXY ? { server: process.env.HTTPS_PROXY, bypass: "localhost,127.0.0.1" } : undefined;
++    return await chromium.launch({ args: ARGS, proxy });
+   } catch (e) {
+     throw new RemakeError(
+       "Chromium for Playwright isn't installed.",
+diff --git a/engine/lib/freeze.mjs b/engine/lib/freeze.mjs
+index 4d2d1b5..fca3875 100644
+--- a/engine/lib/freeze.mjs
++++ b/engine/lib/freeze.mjs
+@@ -188,7 +188,20 @@ export async function wheelBy(page, net, dy, { tick = 16, chunk = 100 } = {}) {
+   let left = dy;
+   while (Math.abs(left) > 0) {
+     const d = Math.sign(left) * Math.min(chunk, Math.abs(left));
++    // Local patch (approved by the project owner): mouse.wheel returns before the browser has applied
++    // the scroll, and page time is frozen, so the next screenshot could race it. Wait in real time
++    // until the scroll position has moved (or 300 ms, for pages that scroll a wrapper or are at the
++    // end). Same wait for the original and the remake; thresholds and comparison are untouched.
++    const before = await page.evaluate(() => window.scrollY).catch(() => null);
+     await page.mouse.wheel(0, d);
++    if (before !== null) {
++      const until = Date.now() + 300;
++      while (Date.now() < until) {
++        const now = await page.evaluate(() => window.scrollY).catch(() => before);
++        if (now !== before) break;
++        await new Promise((r) => setTimeout(r, 8));
++      }
++    }
+     left -= d;
+     await page.clock.runFor(tick);
+     if (net.count) await net.idle(1500);
