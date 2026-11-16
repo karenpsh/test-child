@@ -175,3 +175,38 @@ section { padding-block: clamp(4rem, 9vw, 8rem); }
   html { scroll-behavior: auto; }
   .more, .more::after { transition: none; }
 }
+
+/* Cook Me and recipes */
+.lang { display: flex; justify-content: center; margin-bottom: 1.6rem; }
+.lang button { font: 500 .78rem/1 var(--sans); letter-spacing: .14em; padding: .6rem 1.1rem; min-height: 40px; border: 1px solid var(--green); background: transparent; color: var(--green); cursor: pointer; }
+.lang button + button { border-left: 0; }
+.lang button[aria-pressed="true"] { background: var(--green); color: #f3efe2; }
+.lede { text-align: center; max-width: var(--measure); margin: 1.4rem auto 0; }
+.chips { display: flex; flex-wrap: wrap; justify-content: center; gap: .6rem; margin: 2.2rem auto .8rem; max-width: 920px; }
+.chip { font: 400 1rem/1 var(--sans); padding: .75rem 1.15rem; min-height: 44px; border-radius: 999px; border: 1px solid var(--gold); background: #fff; color: var(--ink); cursor: pointer; transition: background .15s ease, color .15s ease; }
+.chip:hover { border-color: var(--green); }
+.chip[aria-pressed="true"] { background: var(--green); border-color: var(--green); color: #f3efe2; }
+.clear-row { text-align: center; min-height: 2rem; margin: 0; }
+.clear { background: none; border: 0; font: italic 1.1rem var(--serif); color: var(--gold-ink); cursor: pointer; text-decoration: underline; text-underline-offset: 4px; }
+#results { margin-top: 1rem; min-height: 3rem; }
+.results-head { text-align: center; font-family: var(--serif); font-size: 1.6rem; margin: .5rem 0 0; }
+.results-note { text-align: center; color: var(--muted); font-size: .95rem; margin: .3rem 0 0; }
+#results .cards { margin-top: 2rem; }
+.cards.three { grid-template-columns: repeat(3, 1fr); }
+h2.all { margin-top: clamp(4rem, 8vw, 7rem); }
+.ph { position: relative; aspect-ratio: 4 / 3; overflow: hidden; }
+.ph .plate { position: absolute; inset: 0; font-size: 1.35rem; line-height: 1.2; }
+.ph img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.card .meta { text-align: center; font-size: .74rem; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--gold-ink); margin: 0; padding: 0 1rem; }
+.card .blurb { text-align: center; font-size: .95rem; line-height: 1.55; padding: .7rem 1.2rem 0; margin: 0; }
+.card .have { text-align: center; font-size: .85rem; font-weight: 500; color: var(--green); margin: .7rem 0 0; }
+.card details { padding-top: .6rem; }
+.card h5 { font: 500 .9rem var(--sans); margin: .8rem 0 .3rem; }
+.card .bit { margin: 1rem 0 0; padding-top: .9rem; border-top: 1px solid var(--rule); font-family: var(--serif); font-style: italic; font-size: 1.12rem; line-height: 1.4; }
+.card .bit strong { font-style: normal; font-family: var(--sans); font-size: .72rem; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--gold-ink); }
+@media (max-width: 900px) { .cards.three { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 520px) { .cards.three { grid-template-columns: 1fr; } .chip { padding: .7rem 1rem; } }
+@media (prefers-reduced-motion: reduce) { .chip { transition: none; } }
+
+/* Keep jump-link targets clear of the sticky header. */
+section[id] { scroll-margin-top: 5.5rem; }
