@@ -210,3 +210,21 @@ h2.all { margin-top: clamp(4rem, 8vw, 7rem); }
 
 /* Keep jump-link targets clear of the sticky header. */
 section[id] { scroll-margin-top: 5.5rem; }
+
+/* Shop cards, references, language link */
+.about { max-width: 70ch; margin: clamp(2rem, 4vw, 3rem) auto 0; }
+.about ul { padding-left: 1.1em; margin: 0; }
+.shop { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(1rem, 2.4vw, 2rem); margin-top: clamp(2.5rem, 5vw, 4rem); }
+.item { text-align: center; }
+.ph.tall { aspect-ratio: 4 / 5; background: var(--panel); border-radius: 4px; }
+.ph.tall img { object-fit: contain; padding: 6%; }
+.item h3 { font-size: 1.45rem; margin: 1.2rem 0 .4rem; }
+.item p { font-size: .98rem; margin: 0 0 1rem; }
+.item .more { font-size: 1.15rem; }
+.refs-h { font-family: var(--sans); font-size: .78rem; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--gold-ink); margin: 3rem 0 1rem; }
+.refs { list-style: none; padding: 0; margin: 0 auto; max-width: 70ch; text-align: left; }
+.refs li { padding: .9rem 0; border-top: 1px solid var(--rule); font-size: .98rem; line-height: 1.5; }
+.refs a { text-underline-offset: 3px; }
+.refs span { display: block; font-size: .82rem; color: var(--muted); margin-top: .2rem; }
+.nav .langlink { border: 1px solid var(--green); padding: .35rem .7rem; }
+@media (max-width: 900px) { .shop { grid-template-columns: repeat(2, 1fr); } }

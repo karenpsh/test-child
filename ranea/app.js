@@ -37,11 +37,9 @@
     },
   };
 
-  let lang = "ms";
-  try {
-    const saved = localStorage.getItem("ranea-lang");
-    if (saved === "en" || saved === "ms") lang = saved;
-  } catch (e) {}
+  // The page's own language decides: index.html is Malay, en/index.html is English.
+  const lang = document.documentElement.lang === "en" ? "en" : "ms";
+  const base = root.dataset.base || "";
   const picked = new Set();
   const $ = (id) => document.getElementById(id);
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
@@ -72,7 +70,7 @@
     const L = r[lang];
     const have = hit && hit.m.length ? `<p class="have">${esc(T.have(hit.m.length, r.tags.length))}</p>` : "";
     return `<article class="card">
-      <div class="ph"><div class="plate" aria-hidden="true">${esc(L.n)}</div>${r.photo ? `<img src="images/${esc(r.img)}" alt="${esc(L.n)}" loading="lazy" onerror="this.remove()">` : ""}</div>
+      <div class="ph"><div class="plate" aria-hidden="true">${esc(L.n)}</div>${r.photo ? `<img src="${base}images/${esc(r.img)}" alt="${esc(L.n)}" loading="lazy" onerror="this.remove()">` : ""}</div>
       <h3>${esc(L.n)}</h3>
       <p class="meta">${esc(r.t[lang])} · ${esc(r.s[lang])}</p>
       <p class="blurb">${esc(L.b)}</p>${have}
@@ -138,7 +136,6 @@
     const T = TEXT[lang];
     root.lang = lang;
     for (const el of root.querySelectorAll("[data-t]")) el.innerHTML = T[el.dataset.t];
-    for (const b of root.querySelectorAll(".lang button")) b.setAttribute("aria-pressed", String(b.dataset.lang === lang));
     $("clear").textContent = T.clear;
     renderChips();
     renderResults();
@@ -152,15 +149,6 @@
       picked.has(k) ? picked.delete(k) : picked.add(k);
       chip.setAttribute("aria-pressed", String(picked.has(k)));
       renderResults();
-      return;
-    }
-    const lb = e.target.closest(".lang button");
-    if (lb) {
-      lang = lb.dataset.lang;
-      try {
-        localStorage.setItem("ranea-lang", lang);
-      } catch (err) {}
-      render();
       return;
     }
     if (e.target.closest("#clear")) {
